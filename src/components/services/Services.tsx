@@ -1,6 +1,6 @@
 import { Variants, motion, useInView } from "framer-motion";
 import "./services.scss";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const variants: Variants = {
   initial: {
@@ -20,15 +20,30 @@ const variants: Variants = {
 const Services = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { margin: "-100px" });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 700);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+  console.log({ isMobile });
+
   return (
     <motion.div
       className="services"
       variants={variants}
       initial="initial"
-      // whileInView={ "animate" }
       ref={ref}
-      // animate={isInView && "animate"}
-      animate={"animate"}
+      animate={isMobile ? "animate" : isInView && "animate"}
+      // whileInView={ "animate" }
+      // animate={"animate"}
     >
       <motion.div className="textContainer" variants={variants}>
         <p>
