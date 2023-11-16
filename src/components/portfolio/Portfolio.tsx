@@ -1,4 +1,4 @@
-import { motion, useScroll } from "framer-motion";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import "./portfolio.scss";
 import { useRef } from "react";
 
@@ -29,34 +29,61 @@ const items = [
   },
 ];
 interface _Props {
-  id: number;
-  title: string;
-  img: string;
-  desc: string;
+  item: {
+    id: number;
+    title: string;
+    img: string;
+    desc: string;
+  };
 }
-const Single = (item: _Props) => {
-  return <section>{item.title}</section>;
+const Single = ({ item }: _Props) => {
+  const ref = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    // offset: ["start start", "end start"],
+  });
+
+  // const y = useTransform(scrollYProgress, [0, 1], ["0%", "-300%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["-300px", "300px"]);
+
+  return (
+    <section>
+      <div className="container">
+        <div className="wrapper">
+          <div className="imgContainer" ref={ref}>
+            <img src={item.img} alt="" />
+          </div>
+          <motion.div style={{ y }} className="textContainer">
+            <h2>{item.title}</h2>
+            <p>{item.desc}</p>
+            <button>See Demo</button>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
 };
+
 const Portfolio = () => {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["end end", "start start"],
   });
+
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+  });
   return (
     <div className="portfolio" ref={ref}>
       <div className="progress">
         <h1>Featured Works</h1>
-        <div className="progressBar"></div>
+        <motion.div style={{ scaleX }} className="progressBar"></motion.div>
       </div>
       {items.map((item) => (
-        <Single
-          title={item.title}
-          desc={item.desc}
-          id={item.id}
-          img={item.img}
-          key={item.id}
-        />
+        <Single item={item} key={item.id} />
       ))}
     </div>
   );
