@@ -1,0 +1,3 @@
+VITE_MAIL_PK=inimailpublickey
+VITE_MAIL_SERVICE=servicekey
+VITE_MAIL_TEMPLATE=templatekey
