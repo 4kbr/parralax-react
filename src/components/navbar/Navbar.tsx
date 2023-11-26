@@ -12,7 +12,7 @@ export default function Navbar() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
-          ZAHURRa
+          ZARRA
         </motion.span>
         <div className="social">
           <a href="#">
